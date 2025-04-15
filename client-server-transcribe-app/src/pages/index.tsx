@@ -178,7 +178,7 @@ export default function Home() {
   return (
     <>
       <Head>
-        <title>AWS Transcribe App</title>
+        <title>Client-Server + Batch Transcribe App</title>
         <meta
           name="description"
           content="Audio transcription app using AWS Transcribe"

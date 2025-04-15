@@ -3,7 +3,6 @@ import formidable from "formidable";
 import { uploadToS3 } from "~/utils/s3Client";
 import fs from "fs";
 
-// Disable body parsing, we'll handle it with formidable
 export const config = {
   api: {
     bodyParser: false,
@@ -19,7 +18,6 @@ export default async function handler(
   }
 
   try {
-    // Create a temporary directory for the upload
     const form = formidable({
       maxFiles: 1,
       maxFileSize: 10 * 1024 * 1024, // 10MB max size

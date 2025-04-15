@@ -2,8 +2,8 @@
 
 This repository contains implementations of two different architectural approaches for a real-time audio transcription system:
 
-1. **Client-Server with Batch Processing** (Client-Server_Batch-Transcription-App)
-2. **Pub-Sub with Pipe-and-Filter Processing** (Pub-Sub_Pipe-And-Filter-Transcription-App)
+1. **Client-Server with Batch Processing** (client-server-transcribe-app)
+2. **Pub-Sub with Pipe-and-Filter Processing** (pub-sub-transcribe-app)
 
 Both implementations demonstrate key architectural patterns in the context of a web-based audio transcription application, providing a practical comparison of different design choices.
 
@@ -49,7 +49,7 @@ Both implementations are built on:
    npm install -g typescript
    ```
 
-### Client-Server Architecture (Client-Server_Batch-Transcription-App)
+### Client-Server Architecture (client-server-transcribe-app)
 
 1. Navigate to the project directory:
    ```bash
@@ -62,7 +62,7 @@ Both implementations are built on:
    ```
 
 3. Configure environment variables:
-   - Create a `.env.local` file with:
+   - Create a `.env` file with:
      ```
      # AWS Configuration
      AWS_REGION=us-east-1
@@ -74,17 +74,17 @@ Both implementations are built on:
      NEXT_PUBLIC_API_URL=http://localhost:3000/api
      ```
 
-### Pub-Sub Architecture (Pub-Sub_Pipe-And-Filter-Transcription-App)
+### Pub-Sub Architecture (pub-sub-transcribe-app)
 
 1. Backend setup:
    ```bash
-   cd Pub-Sub_Pipe-And-Filter-Transcription-App/backend
+   cd pub-sub-transcribe-app/backend
    npm install
    ```
 
 2. Frontend setup:
    ```bash
-   cd Pub-Sub_Pipe-And-Filter-Transcription-App/frontend
+   cd pub-sub-transcribe-app/frontend-react
    npm install
    ```
 
@@ -124,25 +124,19 @@ npm run build
 #### Backend
 
 ```bash
-cd Pub-Sub_Pipe-And-Filter-Transcription-App/backend
+cd pub-sub-transcribe-app/backend
 
 # Development build with watch mode
 npm run dev
-
-# Production build
-npm run build
 ```
 
 #### Frontend
 
 ```bash
-cd Pub-Sub_Pipe-And-Filter-Transcription-App/frontend
+cd pub-sub-transcribe-app/frontend-react
 
 # Development build with hot-reload
 npm start
-
-# Production build
-npm run build
 ```
 
 ## Executing the System
@@ -153,12 +147,7 @@ npm run build
 cd client-server-transcribe-app
 
 # Development mode
-npm run build
 npm run dev
-
-# Production mode
-npm run build
-npm start
 ```
 
 Access the application at `http://localhost:3000`
@@ -167,26 +156,18 @@ Access the application at `http://localhost:3000`
 
 1. Start the backend:
    ```bash
-   cd Pub-Sub_Pipe-And-Filter-Transcription-App/backend
+   cd pub-sub-transcribe-app/backend
    
    # Development mode
    npm run dev
-   
-   # Production mode
-   npm run build
-   npm start
    ```
 
 2. In a separate terminal, start the frontend:
    ```bash
-   cd Pub-Sub_Pipe-And-Filter-Transcription-App/frontend
+   cd pub-sub-transcribe-app/frontend-react
    
    # Development mode
    npm start
-   
-   # Production mode
-   npm run build
-   npx serve -s build
    ```
 
 Access the application at `http://localhost:3000` (or the port indicated in the terminal)

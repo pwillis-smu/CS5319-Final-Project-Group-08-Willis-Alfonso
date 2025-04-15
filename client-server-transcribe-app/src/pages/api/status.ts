@@ -6,14 +6,13 @@ import {
 import { S3Client, GetObjectCommand } from "@aws-sdk/client-s3";
 import { env } from "~/env";
 
-// Configure AWS clients
 const transcribeClient = new TranscribeClient({
   region: env.AWS_REGION,
   credentials: {
     accessKeyId: env.AWS_ACCESS_KEY_ID,
     secretAccessKey: env.AWS_SECRET_ACCESS_KEY,
   },
-});
+} as any);
 
 const s3Client = new S3Client({
   region: env.AWS_REGION,
@@ -21,7 +20,7 @@ const s3Client = new S3Client({
     accessKeyId: env.AWS_ACCESS_KEY_ID,
     secretAccessKey: env.AWS_SECRET_ACCESS_KEY,
   },
-});
+} as any);
 
 export default async function handler(
   req: NextApiRequest,
@@ -38,7 +37,6 @@ export default async function handler(
       return res.status(400).json({ error: "jobName is required" });
     }
 
-    // Get transcription job status
     const getCommand = new GetTranscriptionJobCommand({
       TranscriptionJobName: jobName,
     });
@@ -51,33 +49,23 @@ export default async function handler(
 
     const jobStatus = response.TranscriptionJob.TranscriptionJobStatus;
     
-    // If the job is complete and we have a transcript file, fetch it
     let transcriptText = null;
     if (
       jobStatus === "COMPLETED" && 
       response.TranscriptionJob.Transcript?.TranscriptFileUri
     ) {
       try {
-        // Extract the S3 key from the S3 URI provided by AWS Transcribe
         const transcriptUri = response.TranscriptionJob.Transcript.TranscriptFileUri;
         console.log("Transcript URI:", transcriptUri);
-        
-        // Parse the S3 URI to get the key
-        // Format is typically: https://s3.[region].amazonaws.com/[bucket]/[key]
-        // or s3://[bucket]/[key]
         let s3Key;
         if (transcriptUri.startsWith('s3://')) {
-          // s3://bucket/key format
           const parts = transcriptUri.substring(5).split('/');
-          // Remove bucket from the parts to get the key
           parts.shift();
           s3Key = parts.join('/');
         } else {
-          // https URL format
           const url = new URL(transcriptUri);
-          s3Key = url.pathname.substring(1); // Remove leading slash
+          s3Key = url.pathname.substring(1);
           
-          // If the URL includes the bucket name in the path, remove it
           const bucketPrefixWithSlash = env.S3_BUCKET_NAME + '/';
           if (s3Key.startsWith(bucketPrefixWithSlash)) {
             s3Key = s3Key.substring(bucketPrefixWithSlash.length);
@@ -86,13 +74,11 @@ export default async function handler(
         
         console.log("Extracting from S3 key:", s3Key);
         
-        // Get the transcript JSON file from S3
         const getObjectCommand = new GetObjectCommand({
           Bucket: env.S3_BUCKET_NAME,
           Key: s3Key,
         });
         
-        // This is the actual implementation to fetch and parse the transcript
         const { Body } = await s3Client.send(getObjectCommand);
         const bodyString = await streamToString(Body);
         const transcriptData = JSON.parse(bodyString);
@@ -124,7 +110,6 @@ export default async function handler(
   }
 }
 
-// Helper function to convert a readable stream to a string
 function streamToString(stream: any): Promise<string> {
   return new Promise((resolve, reject) => {
     const chunks: Buffer[] = [];

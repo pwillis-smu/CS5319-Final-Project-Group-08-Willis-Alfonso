@@ -5,14 +5,13 @@ import {
 } from "@aws-sdk/client-transcribe";
 import { env } from "~/env";
 
-// Configure AWS Transcribe client
 const transcribeClient = new TranscribeClient({
   region: env.AWS_REGION,
   credentials: {
     accessKeyId: env.AWS_ACCESS_KEY_ID,
     secretAccessKey: env.AWS_SECRET_ACCESS_KEY,
   },
-});
+} as any);
 
 export default async function handler(
   req: NextApiRequest,
@@ -29,19 +28,15 @@ export default async function handler(
       return res.status(400).json({ error: "s3Uri and jobName are required" });
     }
 
-    // Determine media format from S3 URI
     let fileExtension = s3Uri.split('.').pop()?.toLowerCase() || "mp3";
     
-    // AWS Transcribe only accepts specific formats
     const validFormats = ["mp3", "mp4", "wav", "flac", "amr", "ogg", "webm", "m4a"];
     if (!validFormats.includes(fileExtension)) {
-      // Default to mp3 if not a recognized format
       fileExtension = "mp3";
     }
     
     console.log(`Using media format: ${fileExtension} for file: ${s3Uri}`);
     
-    // Start transcription job
     const startCommand = new StartTranscriptionJobCommand({
       TranscriptionJobName: jobName,
       Media: { MediaFileUri: s3Uri },
